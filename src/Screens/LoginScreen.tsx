@@ -1,16 +1,38 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import Background from '../components/Background'
 import WhiteLogo from '../components/WhiteLogo'
 import { loginStyles } from '../theme/loginTheme'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useForm } from '../hooks/useForm';
+import { StackScreenProps } from '@react-navigation/stack'
 
-const LoginScreen = () => {
+interface Props extends StackScreenProps<any, any> {}
+
+const LoginScreen = ({ navigation }:Props) => {
+
+  const { email, password, form, onChange} = useForm({
+    email: '',
+    password: ''
+  })
+
+  const onLogin = () =>{
+    console.log({
+      email, password
+    })
+    Keyboard.dismiss()
+  }
+
   return (
     <>
     
     <Background/>
 
-
+    <KeyboardAvoidingView style={{ flex: 1 }}
+      behavior={ (Platform.OS === 'ios') ? 'padding' : 'height'}
+    >
+      
+    <View style={loginStyles.formContainer}>
     <WhiteLogo/>
 
     <Text style={ loginStyles.title }>
@@ -21,17 +43,67 @@ const LoginScreen = () => {
         Email
     </Text>
     <TextInput
+
+        onChangeText={ (value) => onChange( value, 'email')}
+        value={email}
+        onSubmitEditing={onLogin}
         placeholder='Ingrese email'
         keyboardType='email-address'
         // placeholderTextColor={'rgba(255,255,255, 0.4)'}
-        style={{
-            paddingHorizontal: 15,
-            marginTop: 10,
-            backgroundColor: 'white',
-            borderRadius: 15
-        }}
+        underlineColorAndroid={'white'}
+        autoCapitalize='none'
+        autoCorrect={false}
+        style={loginStyles.textInput}
     />
+
+
+    <Text style={ loginStyles.label }>
+        Password
+    </Text>
+    <TextInput
+
+        onChangeText={ (value) => onChange( value, 'password')}
+        value={password}
+        onSubmitEditing={onLogin}
+        placeholder='Ingrese password'
+        secureTextEntry
+        // placeholderTextColor={'rgba(255,255,255, 0.4)'}
+        underlineColorAndroid={'white'}
+        autoCapitalize='none'
+        autoCorrect={false}
+
+        style={ loginStyles.textInput}
+    />
+
+{/* boton login */}
+    <View style={loginStyles.btnContainer}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={ loginStyles.button}
+          onPress={ () => onLogin()}
+        >
+          <Text style={loginStyles.buttonText}>
+            Login
+          </Text>
+        </TouchableOpacity>
+    </View>
+
+{/* crear una nueva cuenta */}
+    <View style={loginStyles.newUserContainer}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={ ()=> navigation.replace('RegisterScreen')}
+        >
+          <Text style={loginStyles.buttonText}>
+            Nueva cuenta ?
+          </Text>
+        </TouchableOpacity>
+    </View>
     
+
+
+    </View>
+    </KeyboardAvoidingView>
     </>
   )
 }
