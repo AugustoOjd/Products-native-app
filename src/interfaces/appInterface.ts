@@ -1,4 +1,8 @@
 
+export interface LoginData {
+    email: string
+    password: string | number
+}
 
 export interface LoginResponse {
     usuario:    IUsuario
@@ -6,11 +10,12 @@ export interface LoginResponse {
 }
 
 export interface IUsuario {
+    id: string,
     role:   string
     state:  boolean
-    google: boolean
-    nombre: string
-    correo: string
-    uid:    string
+    google?: boolean
+    name: string
+    email: string
+    uid?:    string
     img?:   string
 }
