@@ -2,11 +2,13 @@
 export interface LoginData {
     email: string
     password: string | number
+
 }
 
 export interface LoginResponse {
     usuario:    IUsuario
     token:      string
+    error?:     string
 }
 
 export interface IUsuario {

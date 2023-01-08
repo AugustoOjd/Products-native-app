@@ -5,12 +5,15 @@ import LoginScreen from '../Screens/LoginScreen';
 import RegisterScreen from '../Screens/RegisterScreen';
 import ProtecctedScreen from '../Screens/ProtecctedScreen';
 import { AuthContext } from '../context/AuthContext';
+import LoadingScreen from '../Screens/LoadingScreen';
 
 const Stack = createStackNavigator();
 
 const Navitagion = () => {
 
   const { status } = useContext(AuthContext)
+
+  if( status === 'cheking') return <LoadingScreen/>
 
   return (
     <Stack.Navigator
