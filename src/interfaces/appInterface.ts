@@ -5,6 +5,12 @@ export interface LoginData {
 
 }
 
+export interface RegisterData {
+    name: string
+    email: string
+    password: string | number
+}
+
 export interface LoginResponse {
     usuario:    IUsuario
     token:      string

@@ -1,9 +1,10 @@
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { loginStyles } from '../theme/loginTheme'
 import WhiteLogo from '../components/WhiteLogo'
 import { useForm } from '../hooks/useForm'
 import { StackScreenProps } from '@react-navigation/stack'
+import { AuthContext } from '../context/AuthContext'
 
 
 interface Props extends StackScreenProps<any, any> {}
@@ -16,11 +17,15 @@ const RegisterScreen = ({ navigation}:Props) => {
     password: ''
   })
 
+  const { singUp} = useContext(AuthContext)
+
   const onRegister = () =>{
-    console.log({
-      name, email, password
-    })
+    // console.log({
+    //   name, email, password
+    // })
     Keyboard.dismiss()
+    singUp({name, email, password})
+
   }
   
   return (
