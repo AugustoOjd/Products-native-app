@@ -30,26 +30,31 @@ export const AuthProvider = ({ children}: any ) => {
     const [ state, dispatch] = useReducer(authReducer, authInitialState)
 
     const checkToken = async () =>{
-        const token = await AsyncStorage.getItem('x-token')
-        // Validar token
-        if(!token) return dispatch({ type: 'notAuthenticated'})
 
-        // Hay token
-        const { data } = await cafeApi.get('/auth')
-        if( data.error ){
-            return dispatch({ type: 'notAuthenticated'})
-        }
-
-        // await AsyncStorage.setItem('x-token', resp.data.token)
-            dispatch({ 
-                type: 'singUp',
-                payload: {
-                    token: data.token,
-                    user: data.usuario
-                }
+        try {
+            const token = await AsyncStorage.getItem('x-token')
+            // Validar token
+            if(!token) return dispatch({ type: 'notAuthenticated'})
+    
+            // Hay token
+            const { data } = await cafeApi.get('/auth')
+            if( data.error ){
+                return dispatch({ type: 'notAuthenticated'})
+            }
+    
+            // await AsyncStorage.setItem('x-token', resp.data.token)
+                dispatch({ 
+                    type: 'singUp',
+                    payload: {
+                        token: data.token,
+                        user: data.usuario
+                    }
+                })
+        } catch (error) {
+            dispatch({
+                type: 'logout'
             })
-
-
+        }
         
     } 
 

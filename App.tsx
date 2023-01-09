@@ -4,6 +4,7 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import Navitagion from './src/Navigation/Navigation';
 import { AuthProvider } from './src/context/AuthContext';
+import { ProductsProvider } from './src/context/ProductsContext';
 
 interface Props {
   children: React.ReactNode
@@ -13,7 +14,9 @@ const AppState = ({children}: Props) =>{
 
   return(
     <AuthProvider>
-      {children}
+      <ProductsProvider>
+        {children}
+      </ProductsProvider>
     </AuthProvider>
   )
 }
