@@ -14,7 +14,7 @@ const ProductScreen = ({ route, navigation }:Props) => {
 
   const { id = '', newName = 'Nuevo Producto'} = route.params
 
-  const { loadProductById, addProduct, updateProduct } = useContext(ProductsContext)
+  const { loadProductById, addProduct, updateProduct, deleteProduct } = useContext(ProductsContext)
   // const [selectedLanguage, setSelectedLanguage] = useState();
 
   const { _id, name, price, category, img, form, onChange, setFormValue} = useForm({
@@ -57,12 +57,19 @@ const ProductScreen = ({ route, navigation }:Props) => {
 
     if(id.length > 0){
       console.log('actualizar')
-      updateProduct(category, name, id)
+      updateProduct(category, name, id, price)
     }else{
       console.log('crear')
       
       const tempCategory = category || 'cellphone'
-      addProduct(tempCategory, name)
+      addProduct(tempCategory, name, price)
+    }
+  }
+
+  const deleteProducto = () =>{
+
+    if(id.length > 0){
+      deleteProduct(id)
     }
   }
 
@@ -80,6 +87,14 @@ const ProductScreen = ({ route, navigation }:Props) => {
           onChangeText={(value) => onChange(value, 'name')}
         />
 
+      <Text style={styles.title}> Precio del Producto: </Text>
+        <TextInput
+          keyboardType='number-pad'
+          placeholder='$'
+          style={styles.textInput}
+          value={price}
+          onChangeText={(value) => onChange(value, 'price')}
+        />
 
       {/* Picker */}
       <Text style={styles.title}> Categoria: </Text>
@@ -95,12 +110,21 @@ const ProductScreen = ({ route, navigation }:Props) => {
         <Picker.Item label="Smartwatch" value="smartwatch" />
       </Picker>
 
-
+    <View style={{marginBottom: 10}}>
       <Button
         title='Guardar'
         onPress={() => saveOrUpdate() }
         color='#5856D6'
       />
+    </View>
+
+    <View>
+      <Button
+        title='Eliminar'
+        onPress={() => deleteProducto() }
+        color='red'
+      />
+    </View>
 
       <View
         style={{

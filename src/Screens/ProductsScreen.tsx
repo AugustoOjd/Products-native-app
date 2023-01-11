@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import { StyleSheet, Text, View, FlatList, ScrollView, RefreshControl } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { ProductsContext } from '../context/ProductsContext'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -9,7 +9,8 @@ interface Props extends StackScreenProps<ProductsStackParams, 'ProductsScreen'> 
 
 const ProductsScreen = ({navigation}:Props) => {
 
-    const { products } = useContext(ProductsContext)
+    const { products, loadProducts } = useContext(ProductsContext)
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
       
@@ -28,7 +29,11 @@ const ProductsScreen = ({navigation}:Props) => {
     }, [])
     
 
-    // FALTA pull to refresh
+    const loadProductsFromBackend = async () =>{
+        setRefreshing(true)
+        await loadProducts()
+        setRefreshing(false)
+    }
 
     return (
     <View style={styles.container}>
@@ -41,7 +46,7 @@ const ProductsScreen = ({navigation}:Props) => {
                 <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={ () => navigation.navigate('ProductScreen', {
-                        id: (item.id.toString()),
+                        id: (item.id!.toString()),
                         newName: item.name
                     })}
                 >
@@ -52,7 +57,15 @@ const ProductsScreen = ({navigation}:Props) => {
             ItemSeparatorComponent={ ()=> (
                 <View style={ styles.itemSeparator}/>
             )}
+
+            refreshControl={
+                <RefreshControl
+                refreshing={refreshing}
+                onRefresh={loadProductsFromBackend} 
+                />
+            }
         />
+        
     </View>
   )
 }
