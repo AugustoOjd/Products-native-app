@@ -96,6 +96,14 @@ const ProductScreen = ({ route, navigation }:Props) => {
           onChangeText={(value) => onChange(value, 'price')}
         />
 
+      <Text style={styles.title}> Image: </Text>
+        <TextInput
+          placeholder='Link de image'
+          style={styles.textInput}
+          value={img}
+          onChangeText={(value) => onChange(value, 'img')}
+        />
+
       {/* Picker */}
       <Text style={styles.title}> Categoria: </Text>
       
@@ -159,8 +167,8 @@ const ProductScreen = ({ route, navigation }:Props) => {
 
           {
 
-            img.length > 0
-            ?
+            (img.length > 0)
+            &&
             <Image
             source={{
               uri: img
@@ -171,17 +179,7 @@ const ProductScreen = ({ route, navigation }:Props) => {
               height: 250
             }}
           />
-          :
-          <Image
-              source={{
-                uri: 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-1-scaled-1150x647.png'
-              }}
-              style={{
-                marginVertical: 15,
-                width: '100%',
-                height: 250
-              }}
-            />
+
 
           }
 
