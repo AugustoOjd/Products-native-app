@@ -7,14 +7,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Picker} from '@react-native-picker/picker';
 import { useForm } from '../hooks/useForm';
 import { ProductsContext } from '../context/ProductsContext';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 interface Props extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {}
 
 const ProductScreen = ({ route, navigation }:Props) => {
 
   const { id = '', newName = 'Nuevo Producto'} = route.params
+  const [tempUri, setTempUri] = useState<any>()
 
   const { loadProductById, addProduct, updateProduct, deleteProduct } = useContext(ProductsContext)
+  
   // const [selectedLanguage, setSelectedLanguage] = useState();
 
   const { _id, name, price, category, img, form, onChange, setFormValue} = useForm({
@@ -71,6 +74,33 @@ const ProductScreen = ({ route, navigation }:Props) => {
     if(id.length > 0){
       deleteProduct(id)
     }
+  }
+
+  const takePhoto = () =>{
+    launchCamera({
+      mediaType: 'photo',
+      quality: 0.5
+    }, (resp)=>{
+      if(resp.didCancel)return
+      if(!resp.assets) return
+
+      const data = resp.assets.map((e)=> e.uri)
+      // setTempUri(resp.assets![4].uri)
+      // console.log(data[0])
+      setTempUri(data[0])
+    })
+  }
+
+  const takePhotoFromGallery = () =>{
+    launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.5
+    },
+    
+      (resp)=>{
+        console.log(resp.assets)
+      }
+    )
   }
 
 
@@ -145,6 +175,7 @@ const ProductScreen = ({ route, navigation }:Props) => {
         <TouchableOpacity
           activeOpacity={0.8}
           style={ styles.iconBtn}
+          onPress={()=> takePhoto()}
         >
           <Icon 
             name='camera-outline'
@@ -155,7 +186,9 @@ const ProductScreen = ({ route, navigation }:Props) => {
 
         <TouchableOpacity 
             activeOpacity={0.8}
-            style={styles.iconBtn}>
+            style={styles.iconBtn}
+            onPress={ ()=> takePhotoFromGallery()}
+            >
           <Icon 
             name='image-outline'
             size={30}
@@ -165,7 +198,7 @@ const ProductScreen = ({ route, navigation }:Props) => {
 
       </View>
 
-          {
+          {/* {
 
             (img.length > 0)
             &&
@@ -181,7 +214,24 @@ const ProductScreen = ({ route, navigation }:Props) => {
           />
 
 
-          }
+          } */}
+            {
+
+            ( img.length > 0 && !tempUri)
+            &&
+            <Image
+            source={{
+              uri: img ? img : tempUri
+            }}
+            style={{
+              marginVertical: 15,
+              width: '100%',
+              height: 250
+            }}
+            />
+
+
+            }
 
 
       
